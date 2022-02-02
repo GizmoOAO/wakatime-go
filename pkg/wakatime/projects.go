@@ -23,15 +23,15 @@ type ProjectsResponse struct {
 
 // Project is the project of the commit.
 type Project struct {
-	CreatedAt                    *time.Time  `json:"created_at,omitempty"`
-	HasPublicURL                 *bool       `json:"has_public_url,omitempty"`
-	HTMLEscapedName              *string     `json:"html_escaped_name,omitempty"`
-	HumanReadableLastHeartbeatAt *string     `json:"human_readable_last_heartbeat_at,omitempty"`
-	ID                           *string     `json:"id,omitempty"`
-	LastHeartbeatAt              *time.Time  `json:"last_heartbeat_at,omitempty"`
-	Name                         *string     `json:"name,omitempty"`
-	Repository                   *Repository `json:"repository,omitempty"`
-	URL                          *string     `json:"url,omitempty"`
+	CreatedAt                    *time.Time `json:"created_at,omitempty"`
+	HasPublicURL                 *bool      `json:"has_public_url,omitempty"`
+	HTMLEscapedName              *string    `json:"html_escaped_name,omitempty"`
+	HumanReadableLastHeartbeatAt *string    `json:"human_readable_last_heartbeat_at,omitempty"`
+	ID                           *string    `json:"id,omitempty"`
+	LastHeartbeatAt              *time.Time `json:"last_heartbeat_at,omitempty"`
+	Name                         *string    `json:"name,omitempty"`
+	//Repository                   *Repository `json:"repository,omitempty"`
+	URL *string `json:"url,omitempty"`
 }
 
 // Repository is the repository of the project.

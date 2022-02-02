@@ -32,14 +32,18 @@ const (
 )
 
 // NewClient returns a new Client with the given API key.
-func NewClient(apikey string, httpClient *http.Client) *Client {
+func NewClient(apikey string, httpClient *http.Client, apiBase ...string) *Client {
 	c := &Client{}
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
 	c.common = service{
-		apikey: apikey,
-		client: httpClient,
+		apikey:  apikey,
+		apiBase: APIBase,
+		client:  httpClient,
+	}
+	if len(apiBase) > 0 && apiBase[0] != "" {
+		c.common.apiBase = apiBase[0]
 	}
 
 	c.Commits = (*CommitService)(&c.common)
@@ -54,13 +58,15 @@ func NewClient(apikey string, httpClient *http.Client) *Client {
 }
 
 type service struct {
-	apikey string
-	client *http.Client
+	apikey  string
+	apiBase string
+	client  *http.Client
 }
 
 func (s *service) get(ctx context.Context, endpoint string, query url.Values) ([]byte, error) {
-	url := APIBase + endpoint
-	request, err := http.NewRequest("GET", url, nil)
+	u := s.apiBase + endpoint
+
+	request, err := http.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("new request err :%w", err)
 	}
@@ -89,11 +95,9 @@ func (s *service) get(ctx context.Context, endpoint string, query url.Values) ([
 }
 
 func (s *service) post(ctx context.Context, endpoint string, query url.Values, params interface{}) ([]byte, error) {
-
-	url := APIBase + endpoint
+	u := s.apiBase + endpoint
 
 	var reqBody io.Reader
-
 	v := reflect.ValueOf(params)
 	if v.Kind() == reflect.Ptr && v.IsNil() {
 		paramsBytes, err := json.Marshal(params)
@@ -105,7 +109,7 @@ func (s *service) post(ctx context.Context, endpoint string, query url.Values, p
 		reqBody = nil
 	}
 
-	request, err := http.NewRequest("POST", url, reqBody)
+	request, err := http.NewRequest("POST", u, reqBody)
 	if err != nil {
 		return nil, fmt.Errorf("new request err :%w", err)
 	}
